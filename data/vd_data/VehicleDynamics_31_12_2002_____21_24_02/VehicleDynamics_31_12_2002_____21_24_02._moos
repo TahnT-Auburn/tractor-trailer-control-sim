@@ -1,0 +1,234 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LOG FILE:       /home/gavlab/devel/MOOS_pile/data/VehicleDynamics_31_12_2002_____21_24_02/VehicleDynamics_31_12_2002_____21_24_02._moos
+%% FILE OPENED ON  Tue Dec 31 21:24:02 2002
+%% LOGSTART               1041391442.16
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+//name of the machine hosting the MOOSDB 
+//(can be an I.P address aswell as a FQDN)
+ServerHost = localhost
+
+//port DB listens on (make sure you are blocking the port you request)
+ServerPort = 9000
+
+//optional global simualtion flags (some processes use this to fake reality when required)
+Simulator = false
+
+
+///////////////////////////////////
+// gXbow400 configuration  block //
+///////////////////////////////////
+ProcessConfig = gXbow400
+{
+   AppTick=80
+   CommsTick=100.0
+   PUBLISHRAW=FALSE
+   READ_BUFFER_SIZE = 31
+   POLLED_SENSOR=TRUE
+   //PORT_NAME=/dev/ttyS1
+   PORT_NUM=0
+   BAUD=38400
+   USB_PORT=FALSE
+   NUM_ATTEMPTS=1
+   APPEND_APP_NAME=FALSE
+   MODEL=CC_100   // CC_200 or CC_100
+}
+
+//////////////////////////////////
+// G35 can configuration  block  //
+//////////////////////////////////
+ProcessConfig = gG35_2_can
+{
+   
+   //You will need these lines regardless of sensor type
+   AppTick=.1
+   CommsTick=50.0
+
+   //Generic Moos Settings Sensor 
+   SAMPLE_RATE=0.05;
+   PUBLISHRAW=FALSE
+   NUM_ATTEMPTS=1
+   POLLED_SENSOR = FALSE;
+   APPEND_APP_NAME = FALSE;
+   //PORT_NAME=pcanusb0
+   //USB_PORT=TRUE
+
+  //CAN BUS Settings
+   BAUD = 500 //k, 5, 10, 20, 50, 100, 125, 250, 500, 1 -(1M)
+   MSGYTPE = 0; // 0=Standard, 1=RTR, 2=Extended, 3=Status;
+   ID_LOW = 0;
+   ID_HIGH = 2047; //536870911; //1FFFFFFF
+   DEVICE_NAME=/dev/pcanusb0
+}
+
+//////////////////////////////////
+// gSeptentrio configuration  block  //
+//////////////////////////////////
+ProcessConfig = gSeptentrio
+{
+
+   AppTick=0.1
+   CommsTick=150.0
+   PUBLISHRAW=FALSE
+   POLLED_SENSOR=FALSE
+   PORT_NUM=2
+   BAUD=115200
+   USB_PORT=FALSE
+   NUM_ATTEMPTS=1
+   APPEND_APP_NAME=FALSE
+   OUTPUT_RATE=.5 //.1 .2 .5 1.0 2.0....60 seconds
+   RANGE_OUTPUT_RATE=.5
+   SEPTENTRIO_COM = COM1  //COM1 COM2 COM3 COM4 of the septentrio reciever
+   READ_BUFFER_SIZE = 28
+   SMOOTHING=FALSE
+
+   MANUAL_ANTENNA_POS=false
+   
+   // Look in appendix D of septentrio manual for acceptable Block IDs(Logs) to read
+   Log = PVTCar   //Position Velocity Time in Cartesian
+   Log = AttEuler //Attitude Euler
+   Log = CovEuler //Attitude Euler Covariance
+   Log = CovCar
+   Log = Meas
+   Log = Nav
+   
+
+
+  // USE_RTK=TRUE
+  // RTK_COM=2
+  // RTK_BAUD=115200
+  // RTK_CORRECTION_TYPE=CMR
+
+
+//   x1=0.029
+//   y1=1.146
+//   z1=0
+//   x2=1.909
+//   y2=0
+//   z2=0
+
+//   x1=0.0292
+//   y1=1.1464
+//   z1=0
+//   x2=1.9091
+//   y2=0
+//   z2=0
+
+   
+//   x1=-0.467
+//   y1=1.154
+//   z1=0
+//   x2=0.470
+//   y2=1.154
+//   z2=0
+}
+
+//////////////////////////////////
+// pLogger configuration  block  //
+//////////////////////////////////
+ProcessConfig = pLogger
+{
+   AppTick=100.0 
+   CommsTick=100.0
+   File = VehicleDynamics
+   SyncLog = true @ 0.02
+   AsyncLog = true
+   FileTimeStamp = true
+
+   GlobalLogPath=/home/gavlab/devel/MOOS_pile/data
+
+   //////////////////////////////
+   // G35 CAN measurements//
+   //////////////////////////////
+   Log = zYawRate_CAN @ 0
+   Log = zTransversalAccleration @ 0
+   Log = zLongitudinalAcceleration @ 0
+   Log = Wheel_SpeedRR @ 0
+   Log = Wheel_SpeedRL @ 0
+   Log = Wheel_SpeedFR @ 0
+   Log = Wheel_SpeedFL @ 0
+   Log = Steering_Angle_Velocity @ 0
+   Log = SteerAngle @ 0
+   Log = Estimated_Engine_Torque @ 0
+Log = EngineRPM @ 0
+
+   /////////////////////////////
+   // septentrio measurements //
+   /////////////////////////////
+   // Look in appendix D of septentrio manual for acceptable Block IDs(Logs) to read
+   Log = zYaw @ 0
+   Log = zPitch @ 0
+   Log = zRoll @ 0
+   Log = zYaw_Var @ 0
+   Log = zPitch_Var @ 0
+   Log = zRoll_Var @ 0
+
+   Log = zECEF_Z @ 0
+   Log = zECEF_Z_Var @ 0
+   Log = zECEF_Y @ 0
+   Log = zECEF_Y_Var @ 0
+   Log = zECEF_X @ 0
+   Log = zECEF_X_Var @ 0
+   Log = zECEF_VZ @ 0
+   Log = zECEF_VZ_Var @ 0
+   Log = zECEF_VY @ 0
+   Log = zECEF_VY_Var @ 0
+   Log = zECEF_VX @ 0
+   Log = zECEF_VX_Var @ 0
+
+   Log = zGPSSeconds_ATT @ 0
+   Log = zGPSSeconds_PVT @ 0
+   Log = zGPSSeconds_Range @ 0
+   Log = zGPSWeek_ATT @ 0
+   Log = zGPSWeek_PVT @ 0
+   Log = zGPSWeek_Range @ 0
+
+   Log = zNumSats_PVT @ 0
+   //Log = zNumSats_ATT @ 0
+   //Log = zNumObservations3 @ 0
+   //Log = zNumObservations2 @ 0
+   //Log = zNumObservations1 @ 0
+   //Log = zMode_PVT @ 0
+   //Log = zMode_ATT @ 0
+   //Log = zL1Phase_3 @ 0
+   //Log = zL1Phase_2 @ 0
+   //Log = zL1Phase_1 @ 0
+   //Log = zL1Doppler_3 @ 0
+   //Log = zL1Doppler_2 @ 0
+   //Log = zL1Doppler_1 @ 0
+
+
+  
+   //Log = zSVID_1 @ 0
+   //Log = zSVID_2 @ 0
+   //Log = zSVID_3 @ 0
+
+   ////////////////////////////
+   // imu measurements (xbow)//
+   ////////////////////////////
+   Log = zAccelX @ 0
+   Log = zAccelY @ 0
+   Log = zAccelZ @ 0
+   Log = zGyroX @ 0
+   Log = zGyroY @ 0
+   Log = zGyroZ @ 0
+}
+
+//////////////////////////////////
+// pAntler configuration  block  //
+//////////////////////////////////
+ProcessConfig = Antler
+{
+   ExecutablePath=/home/gavlab/devel/MOOS/MOOSBin
+
+   //run processes
+   Run = MOOSDB        @   NewConsole = true
+   Run = uMS      @  NewConsole = true
+   Run = pLogger     @  NewConsole = true
+   Run = gSeptentrio @  NewConsole = false
+   Run = gXbow400  @  NewConsole = true
+   Run = gG35_2_can @  NewConsole = true
+
+   
+}
+
