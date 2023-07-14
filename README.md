@@ -1,2 +1,2 @@
 # tractor-trailer-control-sim
-Tracto-trailer control simulations
+Tractor-trailer control simulations
